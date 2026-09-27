@@ -54,6 +54,12 @@ void setTrip(Trip& trip) {
     int pickupNumber = readInt("Pickup " + range, 1, count);
     int dropoffNumber = readInt("Drop-off " + range, 1, count);
 
+    // A trip needs two different places.
+    while (dropoffNumber == pickupNumber) {
+        std::cout << "Pickup and drop-off must be different.\n";
+        dropoffNumber = readInt("Drop-off " + range, 1, count);
+    }
+
     // List numbers start at 1, indexes start at 0.
     trip.pickup = getLocation(pickupNumber - 1);
     trip.dropoff = getLocation(dropoffNumber - 1);
