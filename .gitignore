@@ -1,0 +1,7 @@
+# Local-only planning files. Never commit.
+localignore/
+
+# Build output
+rideplanner
+*.exe
+*.o
