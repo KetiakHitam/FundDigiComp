@@ -1,18 +1,17 @@
 // File: gpsmode.h
-// Purpose: Declarations for the Selective Availability pickup accuracy simulation.
+// Purpose: Selective Availability pickup accuracy simulation
 // Author: Bryan
-// Signatures are fixed. Do not change them without Isac's approval.
+// Signatures fixed, do not change
 
 #ifndef GPSMODE_H
 #define GPSMODE_H
 
 #include <random>
 
-// Random GPS position error in metres for an era (see common.h). Returns -1.0 for an unknown era.
-// The generator is created and seeded in main.cpp.
+// GPS error in metres, -1.0 for an unknown era
 double simulatePickupError(int era, std::mt19937& rng);
 
-// Prints the error and the pickup verdict.
+// Prints the error and the pickup verdict
 void printPickupResult(double errorMeters);
 
 #endif
