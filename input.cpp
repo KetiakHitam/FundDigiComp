@@ -23,9 +23,20 @@ int readInt(const std::string& prompt, int minValue, int maxValue) {
         std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
         return minValue - 1;
     }
+    if (value < minValue || value > maxValue) {
+        std::cout << "Please enter a whole number from " << minValue << " to " << maxValue << ".\n";x
+        return minValue - 1;
+    }
     return value;
 }
 
 void printTitle(const std::string& title) {
+    for (int i = 0; i < 40; i++) {
+        std::cout << "=";
+    }
     std::cout << "\n" << title << "\n";
+    for (int i = 0; i < 40; i++) {
+        std::cout << "=";
+    }
+    std::cout << "\n";
 }
