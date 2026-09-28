@@ -1,33 +1,33 @@
 // File: location.h
-// Purpose: Declarations for the place list and GPS distance calculation.
+// Purpose: Place list and GPS distance
 // Author: Teh En Tong
-// Signatures are fixed. Do not change them without Isac's approval.
+// Signatures fixed, do not change
 
 #ifndef LOCATION_H
 #define LOCATION_H
 
 #include <string>
 
-// A place with its GPS coordinates in decimal degrees.
+// Place with GPS coordinates in decimal degrees
 struct Location {
     std::string name;
     double latitude;
     double longitude;
 };
 
-// Number of places in the list.
+// Number of places
 int getLocationCount();
 
-// Returns the place at index 0 to getLocationCount() - 1.
+// Place at index 0 to count - 1
 Location getLocation(int index);
 
-// Prints the places numbered from 1.
+// Prints places numbered from 1
 void printLocationList();
 
-// Great-circle distance between two places in km (haversine formula).
+// Straight-line distance in km (haversine)
 double straightLineKm(const Location& from, const Location& to);
 
-// Estimated road distance in km from a straight-line distance.
+// Road distance estimate in km
 double estimateRoadKm(double straightKm);
 
 #endif

@@ -1,5 +1,5 @@
 // File: main.cpp
-// Purpose: Menu loop and integration for the GPS Ride Planner.
+// Purpose: Menu loop and integration for the GPS Ride Planner
 // Author: Isac
 
 #include <iomanip>
@@ -14,10 +14,10 @@
 #include "input.h"
 #include "location.h"
 
-// Fixed seed so every run gives the same GPS error sequence (repeatable tests and demo).
+// Fixed seed for repeatable GPS error values
 const unsigned int GPS_RANDOM_SEED = 2000;
 
-// Trip chosen in option 1. Options 2 to 5 need it.
+// Trip set in option 1, required by options 2 to 5
 struct Trip {
     bool isSet = false;
     Location pickup;
@@ -36,7 +36,7 @@ void printMenu() {
               << "0. Exit\n";
 }
 
-// Prints a message and returns false if no trip is set.
+// Returns false and prints a message if no trip is set
 bool requireTrip(const Trip& trip) {
     if (!trip.isSet) {
         std::cout << "Set a trip first (option 1).\n";
@@ -54,7 +54,13 @@ void setTrip(Trip& trip) {
     int pickupNumber = readInt("Pickup " + range, 1, count);
     int dropoffNumber = readInt("Drop-off " + range, 1, count);
 
-    // List numbers start at 1, indexes start at 0.
+    // Pickup and drop-off must differ
+    while (dropoffNumber == pickupNumber) {
+        std::cout << "Pickup and drop-off must be different.\n";
+        dropoffNumber = readInt("Drop-off " + range, 1, count);
+    }
+
+    // List starts at 1, index starts at 0
     trip.pickup = getLocation(pickupNumber - 1);
     trip.dropoff = getLocation(dropoffNumber - 1);
     trip.straightKm = straightLineKm(trip.pickup, trip.dropoff);
