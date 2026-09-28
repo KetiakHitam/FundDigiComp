@@ -1,33 +1,60 @@
 // File: input.cpp
-// Purpose: Validated user input and screen titles.
+// Purpose: Validated user input and screen titles
 // Author: Jimmy
-// STAGE 1 STUB: reads a number with no validation. Jimmy replaces this with the full logic.
 
 #include "input.h"
 
+#include <cctype>
 #include <cstdlib>
 #include <iostream>
-#include <limits>
+#include <stdexcept>
+
+// Removes leading and trailing spaces, tabs and carriage returns
+static std::string trim(const std::string& text) {
+    size_t first = text.find_first_not_of(" \t\r");
+    if (first == std::string::npos) {
+        return "";
+    }
+    size_t last = text.find_last_not_of(" \t\r");
+    return text.substr(first, last - first + 1);
+}
+
+// True if text is an optional minus sign followed by digits only
+static bool isWholeNumber(const std::string& text) {
+    size_t start = (!text.empty() && text[0] == '-') ? 1 : 0;
+    if (start == text.size()) {
+        return false;
+    }
+    for (size_t i = start; i < text.size(); i++) {
+        if (!std::isdigit(static_cast<unsigned char>(text[i]))) {
+            return false;
+        }
+    }
+    return true;
+}
 
 int readInt(const std::string& prompt, int minValue, int maxValue) {
-    (void)maxValue;  // Unused until the real validation is written.
-    std::cout << prompt;
-    int value = 0;
-    if (!(std::cin >> value)) {
-        if (std::cin.eof()) {
+    while (true) {
+        std::cout << prompt;
+        std::string line;
+        if (!std::getline(std::cin, line)) {
             std::cout << "\nInput closed. Exiting.\n";
             std::exit(0);
         }
-        // Discard the bad input so the menu does not loop forever.
-        std::cin.clear();
-        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-        return minValue - 1;
+
+        std::string text = trim(line);
+        if (isWholeNumber(text)) {
+            try {
+                int value = std::stoi(text);
+                if (value >= minValue && value <= maxValue) {
+                    return value;
+                }
+            } catch (const std::out_of_range&) {
+                // Too large for int, handled as invalid below
+            }
+        }
+        std::cout << "Please enter a whole number from " << minValue << " to " << maxValue << ".\n";
     }
-    if (value < minValue || value > maxValue) {
-        std::cout << "Please enter a whole number from " << minValue << " to " << maxValue << ".\n";x
-        return minValue - 1;
-    }
-    return value;
 }
 
 void printTitle(const std::string& title) {

@@ -132,6 +132,9 @@ int main() {
                 std::cout << "Goodbye.\n";
                 running = false;
                 break;
+            default:
+                std::cout << "Invalid choice.\n";
+                break;
         }
     }
     return 0;
