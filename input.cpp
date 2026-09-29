@@ -23,8 +23,9 @@ int readInt(const std::string& prompt, int minValue, int maxValue) {
         std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
         return minValue - 1;
     }
+    value = std::abs(value);  // Ignore negative sign, so -1 is treated as 1.
     if (value < minValue || value > maxValue) {
-        std::cout << "Please enter a whole number from " << minValue << " to " << maxValue << ".\n";x
+        std::cout << "Please enter a whole number from " << minValue << " to " << maxValue << ".\n";
         return minValue - 1;
     }
     return value;
