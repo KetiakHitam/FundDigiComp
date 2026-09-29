@@ -35,10 +35,27 @@ void printLocationList() {
     }
 }
 
+static double toRadians(double degrees) {
+    return degrees * PI / 180.0;
+}
+
 double straightLineKm(const Location& from, const Location& to) {
-    (void)from;  // Unused until the haversine formula is written.
-    (void)to;
-    return 10.0;
+    const double EARTH_RADIUS_KM = 6371.0;
+
+    double lat1 = toRadians(from.latitude);
+    double lon1 = toRadians(from.longitude);
+    double lat2 = toRadians(to.latitude);
+    double lon2 = toRadians(to.longitude);
+
+    double dLat = lat2 - lat1;
+    double dLon = lon2 - lon1;
+
+    double sinLat = std::sin(dLat / 2);
+    double sinLon = std::sin(dLon / 2);
+    double a = sinLat * sinLat + std::cos(lat1) * std::cos(lat2) * sinLon * sinLon;
+    double c = 2 * std::asin(std::sqrt(a));
+
+    return EARTH_RADIUS_KM * c;
 }
 
 double estimateRoadKm(double straightKm) {
