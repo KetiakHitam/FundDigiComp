@@ -45,6 +45,11 @@ bool requireTrip(const Trip& trip) {
     return true;
 }
 
+// Shown when a module returns -1 for invalid input
+void printCalculationError() {
+    std::cout << "Error: invalid input to calculation.\n";
+}
+
 void setTrip(Trip& trip) {
     printTitle("SET TRIP");
     printLocationList();
@@ -81,7 +86,14 @@ void showFare(const Trip& trip) {
     int rideType = readInt("Ride type (1 Car, 2 Bike, 3 Premium): ", RIDE_CAR, RIDE_PREMIUM);
     int hour = readInt("Hour of day (0-23): ", 0, 23);
     double fare = calcFare(rideType, trip.roadKm, hour);
+    if (fare < 0) {
+        printCalculationError();
+        return;
+    }
     std::cout << std::fixed << std::setprecision(2) << "Estimated fare: RM " << fare << "\n";
+    if (isPeakHour(hour)) {
+        std::cout << "Peak hour surge x1.5 applied.\n";
+    }
 }
 
 void showEta(const Trip& trip) {
@@ -92,6 +104,10 @@ void showEta(const Trip& trip) {
     int trafficLevel = readInt("Traffic (1 Light, 2 Moderate, 3 Heavy): ", TRAFFIC_LIGHT, TRAFFIC_HEAVY);
     int rideType = readInt("Ride type (1 Car, 2 Bike, 3 Premium): ", RIDE_CAR, RIDE_PREMIUM);
     int minutes = calcEtaMinutes(trip.roadKm, trafficLevel, rideType);
+    if (minutes < 0) {
+        printCalculationError();
+        return;
+    }
     std::cout << "Estimated arrival: " << minutes << " min\n";
 }
 
@@ -101,6 +117,10 @@ void showPickupAccuracy(std::mt19937& rng) {
               << "2 = after 1 May 2000, Selective Availability OFF\n";
     int era = readInt("Era (1-2): ", ERA_SA_ON, ERA_SA_OFF);
     double errorMeters = simulatePickupError(era, rng);
+    if (errorMeters < 0) {
+        printCalculationError();
+        return;
+    }
     printPickupResult(errorMeters);
 }
 
