@@ -1,14 +1,16 @@
 // File: location.cpp
-// Purpose: Place list and GPS distance calculation.
+// Purpose: Place list and GPS distance calculation
 // Author: Teh En Tong
-// STAGE 1 STUB: two placeholder places and a fixed 10 km distance. Teh replaces this with the full logic.
 
 #include "location.h"
 
+#include <cmath>
 #include <iostream>
 
-const int STUB_LOCATION_COUNT = 6;
-const Location STUB_LOCATIONS[STUB_LOCATION_COUNT] = {
+const double PI = 3.14159265358979;
+
+const int LOCATION_COUNT = 6;
+const Location LOCATIONS[LOCATION_COUNT] = {
     {"MMU Cyberjaya",            2.9276, 101.6413},
     {"KLCC",                     3.1579, 101.7116},
     {"KL Sentral",               3.1340, 101.6865},
@@ -18,20 +20,20 @@ const Location STUB_LOCATIONS[STUB_LOCATION_COUNT] = {
 };
 
 int getLocationCount() {
-    return STUB_LOCATION_COUNT;
+    return LOCATION_COUNT;
 }
 
 Location getLocation(int index) {
-    // Stub guard: the stub input has no range check yet.
-    if (index < 0 || index >= STUB_LOCATION_COUNT) {
-        return STUB_LOCATIONS[0];
+    // Out-of-range index falls back to the first place
+    if (index < 0 || index >= LOCATION_COUNT) {
+        return LOCATIONS[0];
     }
-    return STUB_LOCATIONS[index];
+    return LOCATIONS[index];
 }
 
 void printLocationList() {
-    for (int i = 0; i < STUB_LOCATION_COUNT; i++) {
-        std::cout << (i + 1) << ". " << STUB_LOCATIONS[i].name << "\n";
+    for (int i = 0; i < LOCATION_COUNT; i++) {
+        std::cout << (i + 1) << ". " << LOCATIONS[i].name << "\n";
     }
 }
 
