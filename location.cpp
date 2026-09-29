@@ -7,10 +7,14 @@
 
 #include <iostream>
 
-const int STUB_LOCATION_COUNT = 2;
+const int STUB_LOCATION_COUNT = 6;
 const Location STUB_LOCATIONS[STUB_LOCATION_COUNT] = {
-    {"Place A (stub)", 0.0, 0.0},
-    {"Place B (stub)", 0.0, 0.0},
+    {"MMU Cyberjaya",            2.9276, 101.6413},
+    {"KLCC",                     3.1579, 101.7116},
+    {"KL Sentral",               3.1340, 101.6865},
+    {"Mid Valley Megamall",      3.1180, 101.6770},
+    {"Dataran Putra, Putrajaya", 2.9360, 101.6897},
+    {"KLIA Terminal 1",          2.7456, 101.7072},
 };
 
 int getLocationCount() {
