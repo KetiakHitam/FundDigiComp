@@ -1,5 +1,5 @@
 // File: location.cpp
-// Purpose: Place list and GPS distance calculation
+// Purpose: Place list and GPS distance calculation.
 // Author: Teh En Tong
 
 #include "location.h"
@@ -9,6 +9,7 @@
 
 const double PI = 3.14159265358979;
 
+// The six places, in the required order. Coordinates rounded to 4 decimals.
 const int LOCATION_COUNT = 6;
 const Location LOCATIONS[LOCATION_COUNT] = {
     {"MMU Cyberjaya",            2.9276, 101.6413},
@@ -24,11 +25,7 @@ int getLocationCount() {
 }
 
 Location getLocation(int index) {
-    // Out-of-range index falls back to the first place
-    if (index < 0 || index >= LOCATION_COUNT) {
-        return LOCATIONS[0];
-    }
-    return LOCATIONS[index];
+    return LOCATIONS[index];  // Main only passes valid indexes (0 to 5).
 }
 
 void printLocationList() {
@@ -37,6 +34,7 @@ void printLocationList() {
     }
 }
 
+// Converts degrees to radians.
 static double toRadians(double degrees) {
     return degrees * PI / 180.0;
 }
@@ -61,5 +59,5 @@ double straightLineKm(const Location& from, const Location& to) {
 }
 
 double estimateRoadKm(double straightKm) {
-    return straightKm;
+    return straightKm * 1.3;  // 1.3 is the group's assumption, because roads are not straight lines.
 }
