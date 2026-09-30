@@ -50,6 +50,51 @@ void printCalculationError() {
     std::cout << "Error: invalid input to calculation.\n";
 }
 
+// Shared prompts for options 2 to 5
+int readRideType() {
+    return readInt("Ride type (1 Car, 2 Bike, 3 Premium): ", RIDE_CAR, RIDE_PREMIUM);
+}
+
+int readHour() {
+    return readInt("Hour of day (0-23): ", 0, 23);
+}
+
+int readTrafficLevel() {
+    return readInt("Traffic (1 Light, 2 Moderate, 3 Heavy): ", TRAFFIC_LIGHT, TRAFFIC_HEAVY);
+}
+
+int readEra() {
+    std::cout << "1 = 1990 to 2000, Selective Availability ON (civilian GPS deliberately degraded)\n"
+              << "2 = after 1 May 2000, Selective Availability OFF\n";
+    return readInt("Era (1-2): ", ERA_SA_ON, ERA_SA_OFF);
+}
+
+std::string rideTypeName(int rideType) {
+    switch (rideType) {
+        case RIDE_CAR:
+            return "Car";
+        case RIDE_BIKE:
+            return "Bike";
+        case RIDE_PREMIUM:
+            return "Premium";
+        default:
+            return "Unknown";
+    }
+}
+
+std::string trafficName(int trafficLevel) {
+    switch (trafficLevel) {
+        case TRAFFIC_LIGHT:
+            return "Light";
+        case TRAFFIC_MODERATE:
+            return "Moderate";
+        case TRAFFIC_HEAVY:
+            return "Heavy";
+        default:
+            return "Unknown";
+    }
+}
+
 void setTrip(Trip& trip) {
     printTitle("SET TRIP");
     printLocationList();
@@ -83,8 +128,8 @@ void showFare(const Trip& trip) {
         return;
     }
     printTitle("FARE ESTIMATE");
-    int rideType = readInt("Ride type (1 Car, 2 Bike, 3 Premium): ", RIDE_CAR, RIDE_PREMIUM);
-    int hour = readInt("Hour of day (0-23): ", 0, 23);
+    int rideType = readRideType();
+    int hour = readHour();
     double fare = calcFare(rideType, trip.roadKm, hour);
     if (fare < 0) {
         printCalculationError();
@@ -101,8 +146,8 @@ void showEta(const Trip& trip) {
         return;
     }
     printTitle("ARRIVAL TIME ESTIMATE");
-    int trafficLevel = readInt("Traffic (1 Light, 2 Moderate, 3 Heavy): ", TRAFFIC_LIGHT, TRAFFIC_HEAVY);
-    int rideType = readInt("Ride type (1 Car, 2 Bike, 3 Premium): ", RIDE_CAR, RIDE_PREMIUM);
+    int trafficLevel = readTrafficLevel();
+    int rideType = readRideType();
     int minutes = calcEtaMinutes(trip.roadKm, trafficLevel, rideType);
     if (minutes < 0) {
         printCalculationError();
@@ -113,15 +158,51 @@ void showEta(const Trip& trip) {
 
 void showPickupAccuracy(std::mt19937& rng) {
     printTitle("GPS PICKUP ACCURACY");
-    std::cout << "1 = 1990 to 2000, Selective Availability ON (civilian GPS deliberately degraded)\n"
-              << "2 = after 1 May 2000, Selective Availability OFF\n";
-    int era = readInt("Era (1-2): ", ERA_SA_ON, ERA_SA_OFF);
+    int era = readEra();
     double errorMeters = simulatePickupError(era, rng);
     if (errorMeters < 0) {
         printCalculationError();
         return;
     }
     printPickupResult(errorMeters);
+}
+
+// Runs fare, arrival time and pickup accuracy together
+void showReceipt(const Trip& trip, std::mt19937& rng) {
+    if (!requireTrip(trip)) {
+        return;
+    }
+    printTitle("TRIP DETAILS");
+    int rideType = readRideType();
+    int hour = readHour();
+    int trafficLevel = readTrafficLevel();
+    int era = readEra();
+
+    double fare = calcFare(rideType, trip.roadKm, hour);
+    int minutes = calcEtaMinutes(trip.roadKm, trafficLevel, rideType);
+    double errorMeters = simulatePickupError(era, rng);
+    if (fare < 0 || minutes < 0 || errorMeters < 0) {
+        printCalculationError();
+        return;
+    }
+
+    std::string hourText = std::to_string(hour);
+    if (isPeakHour(hour)) {
+        hourText += " (peak, surge x1.5)";
+    }
+
+    std::cout << "\n============ TRIP RECEIPT ============\n"
+              << std::fixed << std::setprecision(2)
+              << "From:           " << trip.pickup.name << "\n"
+              << "To:             " << trip.dropoff.name << "\n"
+              << "Road distance:  " << trip.roadKm << " km\n"
+              << "Ride type:      " << rideTypeName(rideType) << "\n"
+              << "Hour:           " << hourText << "\n"
+              << "Fare:           RM " << fare << "\n"
+              << "Traffic:        " << trafficName(trafficLevel) << "\n"
+              << "Arrival:        " << minutes << " min\n";
+    printPickupResult(errorMeters);
+    std::cout << "======================================\n";
 }
 
 int main() {
@@ -146,7 +227,7 @@ int main() {
                 showPickupAccuracy(rng);
                 break;
             case 5:
-                std::cout << "Trip receipt is not available yet.\n";
+                showReceipt(trip, rng);
                 break;
             case 0:
                 std::cout << "Goodbye.\n";
