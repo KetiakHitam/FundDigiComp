@@ -1,6 +1,7 @@
 // File: fare.cpp
 // Purpose: Fare calculation for the GPS Ride Planner.
 // Author: Ayman
+// Disclaimer: all rates are invented by the group, not real Grab prices
 
 #include "fare.h"
 #include "common.h"  // ride type constants
