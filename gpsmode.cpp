@@ -1,7 +1,8 @@
 // File: gpsmode.cpp
-// Purpose: Selective Availability pickup accuracy simulation for the GPS Ride Planner.
+// Purpose: Selective Availability pickup accuracy simulation for the GPS Ride Planner
 // Author: Bryan
-// STAGE 1 STUB: returns a fixed value. Bryan replaces this with the full logic.
+// Disclaimer: error ranges are invented by the group, not official GPS figures
+// Ranges model Selective Availability (about 100 m) versus after May 2000 (about 20 m)
 
 #include "gpsmode.h"
 #include "common.h"
